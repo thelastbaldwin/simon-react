@@ -1,25 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useCallback} from "react";
+import styles from "./App.module.css";
+import SimonButton from "./components/SimonButton"
+import {getRandomInt} from "./util";
+
+const COLORS = [
+  "yellow",
+  "blue",
+  "red",
+  "green",
+];
 
 function App() {
+  const [activeColor, setActiveColor] = useState();
+  const handleButtonClick = useCallback(color => {
+    // setActiveColor(color);
+    // setTimeout(() => setActiveColor(), 500);
+    console.log(color);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className={styles.app}>
+      <SimonButton onClick={handleButtonClick} color={COLORS[0]} activeColor={activeColor}/>
+      <SimonButton onClick={handleButtonClick} color={COLORS[1]} activeColor={activeColor}/>
+      <SimonButton onClick={handleButtonClick} color={COLORS[2]} activeColor={activeColor}/>
+      <SimonButton onClick={handleButtonClick} color={COLORS[3]} activeColor={activeColor}/>
+    </main>
   );
 }
 
