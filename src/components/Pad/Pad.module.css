@@ -2,19 +2,14 @@
 	50% { background-color: #eee}
 }
 
-.simonButton {
+.pad {
 	flex: 1 1 50%;
 	height: 50%;
 	border: none;
 }
 
-.simonButton:focus {
+.pad:focus {
 	outline: none;
-	animation: pulse 0.5s ease;
-}
-
-.active {
-	animation: pulse 0.5s ease;
 }
 
 .yellow{
@@ -34,4 +29,8 @@
 
 .green{
 	background-color: #1DBD15;
+}
+
+.active {
+	animation: pulse 0.5s ease;
 }

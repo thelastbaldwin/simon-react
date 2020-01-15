@@ -1,5 +1,9 @@
-.app {
+.board {
     display: flex;
     flex-wrap: wrap;
     height: 100vh;
+}
+
+.gameOver {
+    filter: grayscale(1);
 }
