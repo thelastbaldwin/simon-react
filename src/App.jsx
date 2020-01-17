@@ -2,6 +2,8 @@ import React from "react";
 import Board from "./components/Board"
 import {generateSequence} from "./util";
 
+const after500ms = fn => setTimeout(fn, 500);
+
 const PLAYERS = {
   player: "player",
   computer: "computer",
@@ -10,6 +12,7 @@ const PLAYERS = {
 class App extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       sequence: generateSequence(16),
       selection: null,
@@ -17,75 +20,84 @@ class App extends React.Component {
       gameOver: false,
       player: PLAYERS.computer,
       sequenceIndex: 0
-    }
-
-    this.countDownTimer = null;
+    };
   }
 
   componentDidMount(){
-    setTimeout(this.playSequence, 1000);
-  }
-
-  resetCountdownTimer = () => {
-    this.countDownTimer = setTimeout(() => {
-      this.setState({gameOver: true});
-    }, 3000)
-  }
-
-  playSequence = () => {
-    const {sequenceIndex, turnCount, sequence} = this.state;
-
-    if (sequenceIndex <= turnCount) {
-        this.setState({selection: sequence[sequenceIndex]}, () => {
-          setTimeout(() => {
-            this.setState({
-              selection: null,
-              sequenceIndex: sequenceIndex + 1
-            }, () => {
-              setTimeout(this.playSequence,500);
-            });
-          }, 500);
-        })
-    } else {
+    setTimeout(() => {
       this.setState({
-        player: PLAYERS.player,
-        sequenceIndex: 0,
-        selection: null,
-      }, () => {
-        this.resetCountdownTimer();
-      });
-    }
+        selection: this.state.sequence[0],
+      })
+    }, 1000);
   }
 
-  onPadClick = selection => {
-    clearInterval(this.countDownTimer);
-    const {player, gameOver, sequence, sequenceIndex, turnCount} = this.state;
+  componentDidUpdate(){
+    const {gameOver, sequence, selection, sequenceIndex, player, turnCount} = this.state;
+    const noSelection = { selection: null };
 
-    this.setState({selection}, () => {
-      setTimeout(() => this.setState({selection: null}), 500);
-    });
-
-    if (player !== PLAYERS.computer && !gameOver){
-      if (selection === sequence[sequenceIndex]){
-        if (turnCount === sequence.length) {
-          console.log("you win!");
-        }
-        else if(sequenceIndex === turnCount){
-          this.setState({
-            turnCount: turnCount + 1,
-            sequenceIndex: 0,
-            player: PLAYERS.computer,
-          }, () => setTimeout(this.playSequence, 1000))
+    if (gameOver && selection !== null) {
+      after500ms(() => this.setState(noSelection));
+    } else if (player === PLAYERS.player){
+      if (selection !== null) {
+        if (selection === sequence[sequenceIndex]){
+          // win
+          if (turnCount === sequence.length) {
+            after500ms(() => {
+              this.setState({
+                ...noSelection,
+                gameOver: true
+              })
+            });
+          }
+          // last item in current sequence
+          else if(sequenceIndex === turnCount){
+            after500ms(() => {
+              this.setState({
+                ...noSelection,
+                turnCount: turnCount + 1,
+                sequenceIndex: 0,
+                player: PLAYERS.computer,
+              });
+            });
+          // next step
+          } else {
+            after500ms(() => {
+              this.setState({
+                ...noSelection,
+                sequenceIndex: sequenceIndex + 1,
+              });
+            });
+          }
+          // lose
         } else {
-          this.setState({
-            sequenceIndex: sequenceIndex + 1,
+          after500ms(() => {
+            this.setState({
+              ...noSelection,
+              gameOver: true,
+            });
           });
         }
+      }
+    } else if (player === PLAYERS.computer){
+      // not at the end
+      if (sequenceIndex <= turnCount) {
+        if (selection !== null) {
+          after500ms(() => this.setState({...noSelection, sequenceIndex: sequenceIndex + 1}))
+        } else {
+          after500ms(() => this.setState({ selection: sequence[sequenceIndex]}));
+        }
+      // at the end
       } else {
-        this.setState({gameOver: true});
+        this.setState({
+          ...noSelection,
+          player: PLAYERS.player,
+          sequenceIndex: 0,
+        });
       }
     }
-  };
+  }
+
+  onPadClick = selection => this.setState({selection})
 
   render(){
     return (
