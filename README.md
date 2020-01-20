@@ -1,3 +1,7 @@
+# S I M O N
+
+This is a simple simon game used to teach React.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

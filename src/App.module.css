@@ -1,0 +1,18 @@
+@keyframes hue-rotate {
+    0% {filter: hue-rotate(0)}
+	100% {filter: hue-rotate(360deg)}
+}
+
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+}
+
+.lose {
+    filter: grayscale(1);
+}
+
+.win {
+    animation: hue-rotate 2s linear infinite;
+}

@@ -2,7 +2,7 @@ import React, {useCallback} from "react";
 import classnames from "classnames";
 import styles from "./Pad.module.css";
 
-const Pad = ({color, onClick, active, key, value}) => {
+const Pad = ({color, onClick, active, value}) => {
     const handleClick = useCallback(() => onClick(value), [onClick, value]);
 
     return (
@@ -13,7 +13,6 @@ const Pad = ({color, onClick, active, key, value}) => {
                 {[styles.active]: active}
             )}
             onClick={handleClick}
-            key={key}
         />
     );
 }
